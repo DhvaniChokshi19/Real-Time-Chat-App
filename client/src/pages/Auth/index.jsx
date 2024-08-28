@@ -1,20 +1,42 @@
 import Background from '@/assets/login2.png';
 import victory from "@/assets/victory.svg";
+
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList } from '@/components/ui/tabs';
 import {TabsContent, TabsTrigger} from '@radix-ui/react-tabs';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {toast} from "sonner";
+import apiClient from '@/lib/api-client';
+import { SIGNUP_ROUTE } from '@/utils/constants';
 const auth = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
 
+  const validateSignup = ()=>{
+    if(!email.length){
+      toast.error("Email is required");
+      return false;
+    }
+    if(!password.length){
+      toast.error("Password is required");
+      return false;
+    }
+    if(password !== confirmPassword){
+      toast.error("Password and Confirm Password not matching! ");
+      return false;
+    }
+    return true;
+  }
   const handleLogin = async ()=>{
 
   };
   const handleSignup =async()=>{
-
+    if(validateSignup()){
+      const response =await apiClient.post(SIGNUP_ROUTE,{email,password});
+      cons
+    }
   };
 
   return (
