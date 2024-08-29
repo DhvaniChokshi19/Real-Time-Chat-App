@@ -1,6 +1,5 @@
 import Background from '@/assets/login2.png';
 import victory from "@/assets/victory.svg";
-
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList } from '@/components/ui/tabs';
 import {TabsContent, TabsTrigger} from '@radix-ui/react-tabs';
@@ -8,12 +7,22 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {toast} from "sonner";
 import apiClient from '@/lib/api-client';
-import { SIGNUP_ROUTE } from '@/utils/constants';
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from '@/utils/constants';
 const auth = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-
+const validateLogin =()=>{
+  if(!email.length){
+      toast.error("Email is required");
+      return false;
+    }
+    if(!password.length){
+      toast.error("Password is required");
+      return false;
+    }
+    return true;
+}
   const validateSignup = ()=>{
     if(!email.length){
       toast.error("Email is required");
@@ -30,12 +39,20 @@ const auth = () => {
     return true;
   }
   const handleLogin = async ()=>{
-
+if(validateLogin()){
+  const response = await apiClient.post(
+    LOGIN_ROUTE,{email,password},
+    {withCredentials:true})
+}
   };
   const handleSignup =async()=>{
     if(validateSignup()){
-      const response =await apiClient.post(SIGNUP_ROUTE,{email,password});
-      cons
+      const response =await apiClient.post(
+        SIGNUP_ROUTE,
+        {email,password},
+      {withCredentials:true}
+    );
+      console.log({response});
     }
   };
 
