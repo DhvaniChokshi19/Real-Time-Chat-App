@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import { compare } from "bcrypt";
-const maxAge = 4 * 24 * 60 * 60 * 1000;
+
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 const createToken = (email,userId)=>{
     return jwt.sign({email,userId},process.env.JWT_KEY,{expiresIn:maxAge,})
 }
@@ -14,7 +15,7 @@ export const signup = async (request,response,next)=>{
     const user = await User.create({email,password});
     response.cookie("jwt",createToken(email,user.id),{
         maxAge,
-        secure:true,
+        secure:process.env.NODE_ENV === "production",
         sameSite:"None",
     });
     return response.status(201).json({
@@ -41,7 +42,7 @@ export const login= async(request,response,next)=>{
             return response.status(400).send("Email and Password required!");
         }
         const user = await User.findOne({email});
-        if(!User){
+        if(!user){
             return response.status(404).send("User with given email not found.");
         }
         const auth = await compare(password,user.password);
