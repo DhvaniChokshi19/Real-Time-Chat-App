@@ -70,3 +70,12 @@ export const login= async(request,response,next)=>{
         return response.status(500).send("Inernal server error");
     }
 };
+
+
+export const getUserInfo = async(request,response,next)=>{ 
+try {
+    
+} catch ({error}) {
+    
+}
+}

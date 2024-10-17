@@ -67,7 +67,7 @@ const Auth = () => {
       {withCredentials:true}
     );
     if(response.status === 201){
-      setUserInfo(response.data.user)
+      setUserInfo(response.data.user);
       navigate("/profile");
     }
       console.log({response});
@@ -83,7 +83,7 @@ const Auth = () => {
       <div className='flex flex-col gap-10 items-center flex-col '>
         <div className='flex items-center justify-center'>
           <h1 className='text-5xl font-bold md:text-6xl'>Welcome</h1>
-       <img src={victory} alt="victir img" className='h-[80px]'></img>
+       <img src={victory} alt="victory img" className='h-[80px]'></img>
         </div>
         <p className='font-medium text-center'>Fill in the details to get started!</p>
         <div className='flex items-center justify-center w-full'>
