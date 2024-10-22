@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import { compare } from "bcrypt";
-
+// import  sign  from "jsonwebtoken";
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const createToken = (email,userId)=>{
-    return jwt.sign({email,userId},process.env.JWT_KEY,{expiresIn:maxAge,})
+    return jwt.sign({email,userId},process.env.JWT_KEY,{
+        expiresIn:maxAge,})
 }
 export const signup = async (request,response,next)=>{
     try{
@@ -67,15 +68,60 @@ export const login= async(request,response,next)=>{
         });
     }catch(error){
         console.log({error});
-        return response.status(500).send("Inernal server error");
+        return response.status(500).send("Internal server error");
     }
 };
 
 
 export const getUserInfo = async(request,response,next)=>{ 
 try {
-    
+// console.log(request.userId);
+const userData = await User.findById(request.userId);
+if(!userData){
+    return response.status(404).send("User with the given id not found.")
+}
+return response.status(200).json({
+            id:userData.id,
+            email:userData.email,
+            profileSetup:userData.profileSetup,
+            firstName:userData.firstName,
+            lastName:userData.lastName,
+            image:userData.image,
+            color:userData.color,
+        
+    });
 } catch ({error}) {
-    
+    console.log({error});
+    return response.status(500).send("Internal Server Error");
 }
+};
+
+
+export const updateProfile = async(request,response,next)=>{ 
+try {
+// console.log(request.userId);
+const {userId}=request;
+const{firstName,lastName,color}=request.body;
+
+if(!firstName || !lastName || !color){
+    return response.status(400).send("Firstname, lastname and color is requires!");
 }
+
+const userData = await User.findByIdAndUpdate(userId,{
+    firstName,lastName,color,profileSetup:true
+},{new:true,runValidator:true})
+return response.status(200).json({
+            id:userData.id,
+            email:userData.email,
+            profileSetup:userData.profileSetup,
+            firstName:userData.firstName,
+            lastName:userData.lastName,
+            image:userData.image,
+            color:userData.color,
+        
+    });
+} catch ({error}) {
+    console.log({error});
+    return response.status(500).send("Internal Server Error");
+}
+};

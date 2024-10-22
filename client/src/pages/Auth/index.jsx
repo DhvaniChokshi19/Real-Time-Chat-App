@@ -5,9 +5,9 @@ import { Tabs, TabsList } from '@/components/ui/tabs';
 import {TabsContent, TabsTrigger} from "@radix-ui/react-tabs";
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {toast} from "sonner";
-import { apiClient }from '@/lib/api-client';
-import { LOGIN_ROUTE, SIGNUP_ROUTE } from '@/utils/constants';
+import { toast } from 'sonner';
+import apiClient from '@/lib/api-client'; 
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from '@/utils/constants.js';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store';
 
@@ -44,6 +44,7 @@ const Auth = () => {
     }
     return true;
   }
+
   const handleLogin = async ()=>{
   if(validateLogin()){
     const response = await apiClient.post(
@@ -53,22 +54,19 @@ const Auth = () => {
     );
     if(response.data.user.id){
       setUserInfo(response.data.user)
-      if(response.data.user.profileSetup) navigate("/chat");
-      else navigate("/profile");
+      if(response.data.user.profileSetup) navigate("/Chat");
+      else navigate("/Profile");
     }
       console.log({response});
 }
   };
   const handleSignup =async()=>{
     if(validateSignup()){
-      const response =await apiClient.post(
-        SIGNUP_ROUTE,
-        {email,password},
-      {withCredentials:true}
+      const response =await apiClient.post(SIGNUP_ROUTE,{email,password},{withCredentials:true}
     );
     if(response.status === 201){
       setUserInfo(response.data.user);
-      navigate("/profile");
+      navigate("/Profile");
     }
       console.log({response});
     }
@@ -132,7 +130,7 @@ const Auth = () => {
               value={confirmPassword}
               onChange={(e)=>setConfirmPassword(e.target.value)}></Input>
             <Button className="rounded-full p-6"
-              onClick={handleSignup}>Signup</Button>
+              onClick={handleSignup}>signup</Button>
             </TabsContent>
           </Tabs>
         </div>    

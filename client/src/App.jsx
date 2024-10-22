@@ -6,6 +6,9 @@ import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import { useAppStore } from './store';
 import apiClient from './lib/api-client';
+import { useEffect, useState } from 'react';
+import { GET_USER_INFO } from './utils/constants';
+
 
 const PrivateRoute=({children})=>{
   const {userInfo} = useAppStore();
@@ -19,18 +22,26 @@ const AuthRoute=({children})=>{
   return isAuthenticated ? <Navigate to ="/Chat"/>:children;
 }
 const App = () => {
-const {userInfo,setUserInfo}=useAppStore();
-const [loading, setLoading] = useState(true)
+  const {userInfo,setUserInfo}=useAppStore();
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-  const getUserData = async ()=>{
-    try{
-     const response  = await apiClient.get(GET_USER_INFO,{
-      withCredentials:true,
-     });
-     console.log({response})
-    }catch(error){
-      console.log({error})
-    }
+    const getUserData = async ()=>{
+      try{
+        const response  = await apiClient.get(GET_USER_INFO,{
+          withCredentials:true,
+        });
+        if(response.status===200 && response.data.id){
+          setUserInfo(response.data);
+          }else{
+          setUserInfo(undefined);
+          }
+          console.log({response})
+        }catch(error){
+          setUserInfo(undefined);
+          }finally{
+            setLoading(false);
+          }
   };
   if (!userInfo){
     getUserData()
