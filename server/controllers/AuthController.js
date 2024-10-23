@@ -103,7 +103,7 @@ try {
 const {userId}=request;
 const{firstName,lastName,color}=request.body;
 
-if(!firstName || !lastName || !color){
+if(!firstName || !lastName){
     return response.status(400).send("Firstname, lastname and color is requires!");
 }
 
